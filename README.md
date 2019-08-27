@@ -656,16 +656,18 @@ adb shell pm clear com.qihoo360.mobilesafe
 命令：
 
 ```sh
-adb shell dumpsys activity activities | grep mFocusedActivity
+adb shell dumpsys activity activities | grep mResumedActivity
 ```
 
 输出示例：
 
 ```sh
-mFocusedActivity: ActivityRecord{8079d7e u0 com.cyanogenmod.trebuchet/com.android.launcher3.Launcher t42}
+mResumedActivity: ActivityRecord{8079d7e u0 com.cyanogenmod.trebuchet/com.android.launcher3.Launcher t42}
 ```
 
 其中的 `com.cyanogenmod.trebuchet/com.android.launcher3.Launcher` 就是当前处于前台的 Activity。
+
+*在 Windows 下以上命令可能不可用，可以尝试 `adb shell dumpsys activity activities | findstr mResumedActivity` 或 `adb shell "dumpsys activity activities | grep mResumedActivity"`。*
 
 ### 查看正在运行的 Services
 
@@ -826,6 +828,7 @@ package:/data/app/ecarx.weather-1.apk
 | `--ela <EXTRA_KEY> <EXTRA_LONG_VALUE>[,<EXTRA_LONG_VALUE...]` | long 数组                              |
 
 ### 启动应用/ 调起 Activity
+> 指定Activity名称启动
 
 命令格式：
 
@@ -846,6 +849,21 @@ adb shell am start -n org.mazhuang.boottimemeasure/.MainActivity --es "toast" "h
 ```
 
 表示调起 `org.mazhuang.boottimemeasure/.MainActivity` 并传给它 string 数据键值对 `toast - hello, world`。
+
+> 不指定Activity名称启动（启动主Activity）
+
+命令格式：
+
+```sh
+adb shell monkey -p <packagename> -c android.intent.category.LAUNCHER 1
+```
+例如：
+
+```sh
+adb shell monkey -p com.tencent.mm -c android.intent.category.LAUNCHER 1
+```
+
+表示调起微信主界面。
 
 ### 调起 Service
 

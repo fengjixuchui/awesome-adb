@@ -645,16 +645,18 @@ adb shell pm clear com.qihoo360.mobilesafe
 command:
 
 ```sh
-adb shell dumpsys activity activities | grep mFocusedActivity
+adb shell dumpsys activity activities | grep mResumedActivity
 ```
 
 Example output:
 
 ```sh
-mFocusedActivity: ActivityRecord{8079d7e u0 com.cyanogenmod.trebuchet/com.android.launcher3.Launcher t42}
+mResumedActivity: ActivityRecord{8079d7e u0 com.cyanogenmod.trebuchet/com.android.launcher3.Launcher t42}
 ```
 
 Where `com.cyanogenmod.trebuchet / com.android.launcher3.Launcher` is currently in the foreground Activity.
+
+*The command above may not valid in Windows, you can try `adb shell dumpsys activity activities | findstr mResumedActivity` or `adb shell "dumpsys activity activities | grep mResumedActivity"`.
 
 ### View Running Services
 
@@ -821,6 +823,7 @@ There are some options addting data for `<INTENT>`, similar to `extra` for Bundl
 | `--ela <EXTRA_KEY> <EXTRA_LONG_VALUE> [, <EXTRA_LONG_VALUE ...]` | long array                             |
 
 ### Launch app / Start an Activity
+> start with Activity's name
 
 The syntax is:
 
@@ -841,6 +844,21 @@ adb shell am start -n org.mazhuang.boottimemeasure/.MainActivity --es "toast" "h
 ```
 
 The command above means starting MainActivity of the application with the package name `org.mazhuang.boottimemeasure` with an extra string information (key is 'toast' and value is 'hello, world').
+
+> start without Activity's name
+
+The syntax is:
+
+```sh
+adb shell monkey -p <packagename> -c android.intent.category.LAUNCHER 1
+```
+For example:
+
+```sh
+adb shell monkey -p com.tencent.mm -c android.intent.category.LAUNCHER 1
+```
+
+The command above means starting the launch activity of WeChat.
 
 ### Start a Service
 
